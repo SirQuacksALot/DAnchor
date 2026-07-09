@@ -1,0 +1,8 @@
+[package]
+name = "danchor-desktop"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+danchor-core = { path = "../danchor-core" }

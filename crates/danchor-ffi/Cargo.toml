@@ -1,0 +1,11 @@
+[package]
+name = "danchor-ffi"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[lib]
+crate-type = ["cdylib", "staticlib", "lib"]
+
+[dependencies]
+danchor-core = { path = "../danchor-core" }
