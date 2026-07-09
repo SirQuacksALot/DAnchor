@@ -3,7 +3,7 @@
 ![Rust](https://img.shields.io/badge/rust-CE422B?style=flat-square&logo=rust&logoColor=white&labelColor=ec7979&color=ec7979)
 ![Platform](https://img.shields.io/badge/platform-linux-white?style=flat-square&logo=linux&logoColor=white&labelColor=ec7979&color=ec7979)
 ![Status](https://img.shields.io/badge/status-early_development-white?style=flat-square&logo=git&logoColor=white&labelColor=ec7979&color=ec7979)
-[![CodeFactor](https://img.shields.io/codefactor/grade/github/sirquacksalot/danchor?style=flat-square&logo=devbox&label=%C2%A0&labelColor=ec7979&color=ec7979)](https://www.codefactor.io/repository/github/sirquacksalot/danchor)
+[![CodeFactor](https://img.shields.io/codefactor/grade/github/sirquacksalot/danchor?style=flat-square&logo=devbox&label=quality&labelColor=ec7979&color=ec7979)](https://www.codefactor.io/repository/github/sirquacksalot/danchor)
 [![License: EUPL-1.2](https://img.shields.io/badge/License-EUPL_1.2-blue.svg?style=flat-square&logo=opensourceinitiative&logoColor=white&labelColor=ec7979&color=ec7979)](LICENSE.md)
 [![Code of Conduct](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg?style=flat-square&logo=contributorcovenant&logoColor=white&labelColor=ec7979&color=ec7979)](CODE_OF_CONDUCT.md)
 
