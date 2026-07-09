@@ -75,11 +75,9 @@ Key architectural decisions still open:
 
 [EUPL-1.2](LICENSE.md) — see `Cargo.toml` for workspace metadata.
 
-<div align="center">
 <br>
 
-[<img src="assets/social-github.png" width="40" alt="GitHub">](https://github.com/SirQuacksALot/DAnchor)
+<!-- [<img src="assets/social-github.png" width="40" alt="GitHub">](https://github.com/SirQuacksALot/DAnchor) -->
 <!-- <img src="assets/social-instagram.png" width="40" alt="Instagram"> -->
 <!-- <<img src="assets/social-website.png" width="40" alt="Website"> -->
 
-</div>
