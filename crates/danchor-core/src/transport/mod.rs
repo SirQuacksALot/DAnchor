@@ -4,10 +4,12 @@
 
 mod responder;
 mod server;
+mod session;
 mod socket;
 
 pub use responder::{DeviceIdentity, handle_datagram};
 pub use server::serve_one;
+pub use session::ConnectionRegistry;
 pub use socket::DatagramSocket;
 
 /// Default UDP port DAnchor listens on; also what's advertised as the mDNS
