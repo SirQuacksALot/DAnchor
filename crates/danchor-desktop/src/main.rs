@@ -1,3 +1,5 @@
+mod capture;
+
 use std::net::UdpSocket;
 use std::path::{Path, PathBuf};
 
@@ -8,6 +10,14 @@ use danchor_core::transport::{self, ConnectionRegistry, DeviceIdentity};
 use uuid::Uuid;
 
 fn main() {
+    // Temporary verification hook for Module 2a (screen capture+encode,
+    // standalone - not yet wired into the network transport). Remove once
+    // Module 2b wires captured frames into a real streaming session.
+    if std::env::args().any(|arg| arg == "--capture-test") {
+        run_capture_test();
+        return;
+    }
+
     let hostname = hostname::get()
         .expect("failed to read system hostname")
         .into_string()
@@ -134,4 +144,58 @@ fn decode_hex(s: &str) -> Option<Vec<u8>> {
         .step_by(2)
         .map(|i| u8::from_str_radix(&s[i..i + 2], 16).ok())
         .collect()
+}
+
+// Standalone verification for Module 2a: captures the real screen for a
+// fixed window, writing raw encoded H.264 to a file so it can be played
+// back and visually confirmed (e.g. `ffplay /tmp/danchor-capture-test.h264`).
+// Also dumps each access unit as its own numbered file under
+// /tmp/danchor-capture-frames/ - a flat concatenated .h264 loses frame
+// boundaries, but the Android MediaCodec decode test (Module 2b groundwork)
+// needs to feed exactly one access unit per input buffer, so per-frame files
+// are the simplest way to hand that over without writing a NAL-unit parser.
+fn run_capture_test() {
+    use std::io::Write;
+    use std::sync::atomic::{AtomicU64, Ordering};
+    use std::sync::{Arc, Mutex};
+
+    gstreamer::init().expect("gstreamer init failed");
+
+    let out_path = "/tmp/danchor-capture-test.h264";
+    let frames_dir = PathBuf::from("/tmp/danchor-capture-frames");
+    std::fs::remove_dir_all(&frames_dir).ok();
+    std::fs::create_dir_all(&frames_dir).expect("failed to create capture frames directory");
+
+    let file = Arc::new(Mutex::new(
+        std::fs::File::create(out_path).expect("failed to create capture output file"),
+    ));
+    let frame_count = Arc::new(AtomicU64::new(0));
+
+    let file_for_callback = file.clone();
+    let frame_count_for_callback = frame_count.clone();
+    let frames_dir_for_callback = frames_dir.clone();
+    let session = capture::CaptureSession::start(move |frame| {
+        let n = frame_count_for_callback.fetch_add(1, Ordering::Relaxed) + 1;
+        if n <= 5 || n.is_multiple_of(30) {
+            println!(
+                "frame {n}: {} bytes, keyframe={}",
+                frame.data.len(),
+                frame.keyframe
+            );
+        }
+        let _ = file_for_callback.lock().unwrap().write_all(&frame.data);
+        let frame_path = frames_dir_for_callback.join(format!("frame_{n:05}.h264"));
+        let _ = std::fs::write(frame_path, &frame.data);
+    })
+    .expect("failed to start screen capture");
+
+    println!("capturing for 8 seconds...");
+    std::thread::sleep(std::time::Duration::from_secs(8));
+    session.stop();
+
+    println!(
+        "done - {} frames written to {out_path} and to {}/",
+        frame_count.load(Ordering::Relaxed),
+        frames_dir.display()
+    );
 }

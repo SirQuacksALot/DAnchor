@@ -8,3 +8,8 @@ license.workspace = true
 danchor-core = { path = "../danchor-core" }
 hostname = "0.4.2"
 uuid = { version = "1", features = ["v4"] }
+ashpd = { version = "0.13", features = ["tokio", "screencast"] }
+tokio = { version = "1", features = ["rt-multi-thread"] }
+gstreamer = "0.25"
+gstreamer-app = "0.25"
+pipewire = "0.10"
