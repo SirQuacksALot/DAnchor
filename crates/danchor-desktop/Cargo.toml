@@ -11,5 +11,5 @@ uuid = { version = "1", features = ["v4"] }
 ashpd = { version = "0.13", features = ["tokio", "screencast"] }
 tokio = { version = "1", features = ["rt-multi-thread"] }
 gstreamer = "0.25"
-gstreamer-app = "0.25"
+gstreamer-app = { version = "0.25", features = ["v1_20"] }
 pipewire = "0.10"

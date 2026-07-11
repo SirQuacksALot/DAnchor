@@ -224,6 +224,17 @@ fn build_pipeline(
         .caps(&src_caps)
         .format(gstreamer::Format::Time)
         .is_live(true)
+        // Default max-bytes (200KB) is smaller than a SINGLE raw 1080p frame
+        // (~8MB) and default leaky-type is "none", so without this a live
+        // capture source would either stall or silently drop nearly every
+        // push - and even correctly sized, an unbounded/too-generous queue
+        // here is exactly what let latency creep up over a run (frames
+        // piling up faster than encode+network+decode could drain them).
+        // ~2 frames of headroom + dropping the OLDEST queued frame first
+        // keeps this a "show the newest frame" live source instead of one
+        // that catches up through a growing backlog.
+        .max_bytes(2 * (width as u64) * (height as u64) * 4)
+        .leaky_type(gstreamer_app::AppLeakyType::Downstream)
         .build();
 
     let convert = gstreamer::ElementFactory::make("videoconvert").build()?;
@@ -233,7 +244,12 @@ fn build_pipeline(
     let capsfilter = gstreamer::ElementFactory::make("capsfilter")
         .property("caps", &raw_caps)
         .build()?;
-    let enc = gstreamer::ElementFactory::make("vah264enc").build()?;
+    let enc = gstreamer::ElementFactory::make("vah264enc")
+        // target-usage trades encode quality for speed (1=fastest/lowest
+        // latency, 7=slowest/best compression) - vah264enc's default (4) is
+        // a quality-leaning middle ground, wrong default for a live mirror.
+        .property("target-usage", 1u32)
+        .build()?;
     let parse = gstreamer::ElementFactory::make("h264parse")
         .property_from_str("config-interval", "-1")
         .build()?;
