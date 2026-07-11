@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">DAnchor</string>
+
+    <!-- Connections tab -->
+    <string name="status_searching_mdns">Suche nach Desktops (mDNS)…</string>
+    <string name="status_no_desktops_found">Keine Desktops gefunden - manuell verbinden?</string>
+    <string name="status_desktops_found">Gefundene Desktops:</string>
+    <string name="usb_connected_description">USB verbunden</string>
+    <string name="usb_not_connected_description">USB nicht verbunden</string>
+    <string name="manual_connect_button">Manuell verbinden</string>
+    <string name="settings_content_description">Einstellungen</string>
+    <string name="usb_hint_title">USB-Kabel erkannt, aber USB-Tethering ist aus.</string>
+    <string name="close_content_description">Schließen</string>
+    <string name="usb_hint_body">Kabel ist schneller und stabiler als WLAN - lohnt sich zu aktivieren.</string>
+    <string name="usb_hint_open_settings">Tethering-Einstellungen öffnen</string>
+    <string name="usb_hint_dont_show_again">Nicht mehr anzeigen</string>
+
+    <!-- Tabs -->
+    <string name="tab_connections">Verbindungen</string>
+    <string name="tab_profile">Profil</string>
+
+    <!-- Connection card -->
+    <string name="ping_in_progress">Ping läuft…</string>
+    <string name="rtt_ms_format">%1$d ms</string>
+    <string name="error_format">Fehler: %1$s</string>
+    <string name="secured_content_description">Gesicherte Verbindung</string>
+
+    <!-- Profile tab -->
+    <string name="device_name_label">Gerätename</string>
+    <string name="device_id_label">Geräte-ID</string>
+    <string name="copy_button">Kopieren</string>
+    <string name="trust_secret_label">Trust-Secret</string>
+    <string name="trust_secret_description">Geräte mit demselben Secret erkennen sich später automatisch gegenseitig.</string>
+    <string name="reveal_button">Anzeigen</string>
+    <string name="hide_button">Verbergen</string>
+    <string name="regenerate_button">Neu generieren</string>
+    <string name="adopt_secret_label">Secret von anderem Gerät übernehmen</string>
+    <string name="paste_secret_label">Secret einfügen</string>
+    <string name="adopt_button">Übernehmen</string>
+    <string name="regenerate_confirm_title">Secret neu generieren?</string>
+    <string name="regenerate_confirm_body">Andere Geräte mit dem alten Secret erkennen dieses Gerät danach nicht mehr automatisch.</string>
+    <string name="cancel_button">Abbrechen</string>
+
+    <!-- Settings tab -->
+    <string name="settings_design_label">Design</string>
+    <string name="theme_light">Hell</string>
+    <string name="theme_dark">Dunkel</string>
+    <string name="option_system">System</string>
+    <string name="auto_reload_label">Automatisch alle 10s aktualisieren</string>
+    <string name="visible_for_all_label">Sichtbar für alle</string>
+    <string name="usb_hint_settings_label">USB-Tethering-Hinweis</string>
+    <string name="usb_hint_hidden_body">Der Hinweis wurde dauerhaft ausgeblendet.</string>
+    <string name="usb_hint_reshow_button">Hinweis wieder anzeigen</string>
+    <string name="usb_hint_visible_body">Der Hinweis wird angezeigt, falls zutreffend.</string>
+    <string name="language_label">Sprache</string>
+
+    <!-- Manual connect dialog -->
+    <string name="manual_connect_description">Falls weder mDNS noch der Subnetz-Scan etwas finden.</string>
+    <string name="ip_label">IP</string>
+    <string name="port_label">Port</string>
+    <string name="connecting_label">Verbinde…</string>
+    <string name="connected_rtt_format">Verbunden! RTT: %1$d ms</string>
+    <string name="connect_button">Verbinden</string>
+
+    <!-- Networking errors -->
+    <string name="error_unexpected_reply">Unerwartete Antwort</string>
+    <string name="error_unknown">Unbekannter Fehler</string>
+</resources>
