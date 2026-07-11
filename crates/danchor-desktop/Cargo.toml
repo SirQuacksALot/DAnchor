@@ -6,3 +6,5 @@ license.workspace = true
 
 [dependencies]
 danchor-core = { path = "../danchor-core" }
+hostname = "0.4.2"
+uuid = { version = "1", features = ["v4"] }
