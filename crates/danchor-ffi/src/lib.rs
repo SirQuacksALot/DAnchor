@@ -11,7 +11,7 @@
 use std::net::Ipv4Addr;
 use std::sync::{Arc, Mutex};
 
-use danchor_core::protocol::{Packet, PacketBody};
+use danchor_core::protocol::{FrameReassembler, Packet, PacketBody, VideoFragment};
 use danchor_core::security::{self, HandshakeSession, SecureSession};
 
 uniffi::setup_scaffolding!();
@@ -260,6 +260,80 @@ impl SecureChannel {
     /// Decrypts `ciphertext` that was encrypted under `sequence`.
     pub fn decrypt(&self, sequence: u32, ciphertext: Vec<u8>) -> Option<Vec<u8>> {
         self.inner.decrypt(sequence, &ciphertext).ok()
+    }
+}
+
+/// One wire-sized slice of an encoded video frame - see
+/// `danchor_core::protocol::VideoFragment`. `fragment_index`/`fragment_count`
+/// are widened from `u16` to `u32` on this boundary purely for simpler
+/// Kotlin types (UShort is awkward to work with there).
+#[derive(uniffi::Record)]
+pub struct VideoFragmentFfi {
+    pub frame_id: u32,
+    pub fragment_index: u32,
+    pub fragment_count: u32,
+    pub keyframe: bool,
+    pub data: Vec<u8>,
+}
+
+/// Decodes a datagram that was already decrypted (see `SecureChannel`),
+/// returning the inner video fragment only if it's a well-formed `Video`
+/// packet.
+#[uniffi::export]
+pub fn decode_video(bytes: Vec<u8>) -> Option<VideoFragmentFfi> {
+    let packet = Packet::decode(&bytes).ok()?;
+    let PacketBody::Video(fragment) = packet.body else {
+        return None;
+    };
+    Some(VideoFragmentFfi {
+        frame_id: fragment.frame_id,
+        fragment_index: fragment.fragment_index as u32,
+        fragment_count: fragment.fragment_count as u32,
+        keyframe: fragment.keyframe,
+        data: fragment.data,
+    })
+}
+
+/// A fully reassembled encoded video frame, ready to hand to a decoder.
+#[derive(uniffi::Record)]
+pub struct CompleteFrameFfi {
+    pub frame_id: u32,
+    pub keyframe: bool,
+    pub data: Vec<u8>,
+}
+
+/// Reassembles fragmented video frames as they arrive, possibly out of
+/// order - a thin object wrapper around
+/// `danchor_core::protocol::FrameReassembler`.
+#[derive(uniffi::Object)]
+pub struct FrameReassemblerFfi {
+    inner: Mutex<FrameReassembler>,
+}
+
+#[uniffi::export]
+impl FrameReassemblerFfi {
+    #[uniffi::constructor]
+    pub fn new(max_pending_frames: u32) -> Arc<Self> {
+        Arc::new(Self {
+            inner: Mutex::new(FrameReassembler::new(max_pending_frames as usize)),
+        })
+    }
+
+    /// Feeds one fragment in, returning the reassembled frame once every
+    /// fragment for its `frame_id` has arrived.
+    pub fn insert(&self, fragment: VideoFragmentFfi) -> Option<CompleteFrameFfi> {
+        let complete = self.inner.lock().unwrap().insert(VideoFragment {
+            frame_id: fragment.frame_id,
+            fragment_index: fragment.fragment_index as u16,
+            fragment_count: fragment.fragment_count as u16,
+            keyframe: fragment.keyframe,
+            data: fragment.data,
+        })?;
+        Some(CompleteFrameFfi {
+            frame_id: complete.frame_id,
+            keyframe: complete.keyframe,
+            data: complete.data,
+        })
     }
 }
 
