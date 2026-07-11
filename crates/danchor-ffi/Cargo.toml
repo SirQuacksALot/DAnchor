@@ -7,5 +7,10 @@ license.workspace = true
 [lib]
 crate-type = ["cdylib", "staticlib", "lib"]
 
+[[bin]]
+name = "uniffi-bindgen"
+path = "uniffi-bindgen.rs"
+
 [dependencies]
 danchor-core = { path = "../danchor-core" }
+uniffi = { version = "0.32.0", features = ["cli"] }
