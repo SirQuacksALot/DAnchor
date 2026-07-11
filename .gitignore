@@ -21,3 +21,6 @@ target
 #.idea/
 
 .ai/
+
+# Per-machine rustc toolchain probe cache
+.rustc_info.json
