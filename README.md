@@ -17,6 +17,9 @@
 
 DAnchor reimplements Apple's Sidecar for Linux, in Rust. It turns a tablet — iPad or Android — into a touch-enabled second display for a Linux desktop, streamed over network or USB with a touch input back-channel.
 
+## The Reason Why
+
+Moveing from Windows to linux left me with a good tool like SuperDisplay. A Simple just working solution. Being facinated with the apple integrated way of a second screen I knew I wanted the same. This is my approach with AI to make it happen.
 
 ## Planned Features
 
